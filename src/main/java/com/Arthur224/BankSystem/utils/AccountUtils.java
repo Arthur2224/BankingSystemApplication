@@ -12,6 +12,10 @@ public class AccountUtils {
     public static final String ACCOUNT_CREATION_MESSAGE="Account successfully created!";
     public static final String ACCOUNT_NOT_EXIST_CODE="003";
     public static final String ACCOUNT_NOT_EXIST_MESSAGE="Account doesn't exist!";
+    public static final String ACCOUNT_OF_DESTINATION_NOT_EXIST_CODE="0031";
+    public static final String ACCOUNT_OF_DESTINATION_NOT_EXIST_MESSAGE="DESTINATION account doesn't exist!";
+    public static final String ACCOUNT_OF_SOURCE_NOT_EXIST_CODE="0032";
+    public static final String ACCOUNT_OF_SOURCE_NOT_EXIST_MESSAGE="SOURCE account doesn't exist!";
     public static final String ACCOUNT_FOUND_CODE="004";
     public static final String ACCOUNT_FOUND_MESSAGE="Account is successfuly founded!";
     public static final String ACCOUNT_CREDIT_CODE="005";
@@ -20,7 +24,8 @@ public class AccountUtils {
     public static final String ACCOUNT_DEBIT_MESSAGE="Account is successfuly debited!";
     public static final String ACCOUNT_NOT_AVAILABLE_TO_DEBIT_CODE="007";
     public static final String ACCOUNT_NOT_AVAILABLE_TO_DEBIT_MESSAGE="Account balance is not enough to debit!";
-
+    public static final String ACCOUNT_TRANSFER_CODE="008";
+    public static final String ACCOUNT_TRANSFER_MESSAGE="Transfer successfuly finished!";
 
 
     public static String getAccountNumber() {

@@ -150,4 +150,72 @@ public class UserServiceImpl implements UserService{
                         .build())
                 .build();
     }
-}
+
+    @Override
+    public BankResponse transfer(TransferRequest transferRequest) {
+        /* 1. Check if exist source and destination accounts
+            2. Check if source acc balance is enough to debit money
+            3. If yes than debit from source and credit to destination account
+          */
+
+        boolean isDestinationAccNumberExists= userRepository.existsByAccountNumber(transferRequest.getDestinationAccNumber());
+        boolean isSourceAccNumberExists=userRepository.existsByAccountNumber(transferRequest.getSourceAccNumber());
+
+
+        if(!isDestinationAccNumberExists){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_OF_DESTINATION_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_OF_DESTINATION_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        if(!isSourceAccNumberExists){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_OF_SOURCE_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_OF_SOURCE_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+
+        User sourceUser=userRepository.findByAccountNumber(transferRequest.getSourceAccNumber());
+        User destinationUser=userRepository.findByAccountNumber(transferRequest.getDestinationAccNumber());
+        BigDecimal accountBalanceOfSourceUser = sourceUser.getAccountBalance();
+        Double amountOfMoney=transferRequest.getAmount();
+
+        if(Double.compare(transferRequest.getAmount(),accountBalanceOfSourceUser.doubleValue())==-1){
+
+            sourceUser.setAccountBalance(sourceUser.getAccountBalance().subtract(BigDecimal.valueOf(amountOfMoney)));
+            userRepository.save(sourceUser );
+            destinationUser.setAccountBalance(destinationUser.getAccountBalance().add(BigDecimal.valueOf(transferRequest.getAmount())));
+            userRepository.save(destinationUser);
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_TRANSFER_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_TRANSFER_MESSAGE)
+                    .accountInfo(AccountInfo.builder()
+                            .accountBalance(String.valueOf(sourceUser.getAccountBalance()))
+                            .accountNumber(sourceUser.getAccountNumber())
+                            .accountName(sourceUser.getFirstName()+" "+sourceUser.getLastName()+" "+sourceUser.getOtherName()+" successfuly transfered money in amount of : "+ transferRequest.getAmount()+" to "+destinationUser.getFirstName()+" "+destinationUser.getLastName()+" "+destinationUser.getOtherName())
+                            .build())
+                    .build();
+
+           }
+
+        return BankResponse.builder()
+                .responseCode(AccountUtils.ACCOUNT_NOT_AVAILABLE_TO_DEBIT_CODE)
+                .responseMessage(AccountUtils.ACCOUNT_NOT_AVAILABLE_TO_DEBIT_MESSAGE)
+                .accountInfo(AccountInfo.builder()
+                        .accountBalance(String.valueOf(sourceUser.getAccountBalance()))
+                        .accountNumber(sourceUser.getAccountNumber())
+                        .accountName(sourceUser.getFirstName()+" "+sourceUser.getLastName()+" "+sourceUser.getOtherName()+" is not able to debit money in  ammount of : "+ transferRequest.getAmount())
+                        .build())
+                .build();
+    }
+        
+
+
+
+
+
+    }
+
+

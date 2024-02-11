@@ -4,6 +4,7 @@ import com.Arthur224.BankSystem.dto.*;
 import com.Arthur224.BankSystem.entity.User;
 import com.Arthur224.BankSystem.repository.UserRepository;
 import com.Arthur224.BankSystem.utils.AccountUtils;
+import com.Arthur224.BankSystem.utils.TransactionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -14,6 +15,8 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
     @Autowired
     EmailService emailService;
+    @Autowired
+    TransactionService transactionService;
     @Override
     public BankResponse createAccount(UserRequest userRequest) {
         if(userRepository.existsByEmail(userRequest.getEmail())){
@@ -188,6 +191,14 @@ public class UserServiceImpl implements UserService{
             userRepository.save(sourceUser );
             destinationUser.setAccountBalance(destinationUser.getAccountBalance().add(BigDecimal.valueOf(transferRequest.getAmount())));
             userRepository.save(destinationUser);
+            TransactionDetails transactionDetails=TransactionDetails.builder()
+                    .transactionId(TransactionUtils.getTransactionId())
+                    .transactionType("TRANSFER")
+                    .idOfDestinationAccount(destinationUser.getAccountNumber())
+                    .idOfSourceAccount(sourceUser.getAccountNumber())
+                    .amount(BigDecimal.valueOf(transferRequest.getAmount()))
+                    .build();
+            transactionService.saveTransaction(transactionDetails);
             return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_TRANSFER_CODE)
                     .responseMessage(AccountUtils.ACCOUNT_TRANSFER_MESSAGE)

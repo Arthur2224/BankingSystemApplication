@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -28,6 +30,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private String status;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

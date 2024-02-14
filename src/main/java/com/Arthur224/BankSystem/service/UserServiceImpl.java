@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService{
                     .transactionId(TransactionUtils.getTransactionId())
                     .transactionType("TRANSFER")
                     .idOfDestinationAccount(destinationUser.getAccountNumber())
-                    .idOfSourceAccount(sourceUser.getAccountNumber())
+                    .idOfSourceAccount(sourceUser)
                     .amount(BigDecimal.valueOf(transferRequest.getAmount()))
                     .build();
             transactionService.saveTransaction(transactionDetails);

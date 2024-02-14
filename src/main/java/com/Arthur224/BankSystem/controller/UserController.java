@@ -1,6 +1,7 @@
 package com.Arthur224.BankSystem.controller;
 
 import com.Arthur224.BankSystem.dto.*;
+import com.Arthur224.BankSystem.service.TransactionService;
 import com.Arthur224.BankSystem.service.UserService;
 import com.Arthur224.BankSystem.dto.BankResponse;
 
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    TransactionService transactionService;
     @PostMapping
     public BankResponse createAccount(@RequestBody UserRequest userRequest){
         return userService.createAccount(userRequest);
@@ -35,6 +38,11 @@ public class UserController {
     @GetMapping("transfer")
     public BankResponse debitAccount(@RequestBody TransferRequest transferRequest){
         return  userService.transfer(transferRequest);
+    }
+
+    @GetMapping("transactionData")
+    public String dataEnquiry(@RequestBody EnquiryRequest transferRequest){
+        return  transactionService.dataEnquiry(transferRequest);
     }
 
 }

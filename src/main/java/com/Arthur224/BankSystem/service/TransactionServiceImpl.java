@@ -1,8 +1,11 @@
 package com.Arthur224.BankSystem.service;
 
+import com.Arthur224.BankSystem.dto.EnquiryRequest;
 import com.Arthur224.BankSystem.dto.TransactionDetails;
 import com.Arthur224.BankSystem.entity.Transaction;
+import com.Arthur224.BankSystem.entity.User;
 import com.Arthur224.BankSystem.repository.TransactionRepository;
+import com.Arthur224.BankSystem.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -17,9 +20,20 @@ public class TransactionServiceImpl implements TransactionService{
                 .transactionId(transactionDetails.getTransactionId())
                 .transactionType(transactionDetails.getTransactionType())
                 .idOfDestinationAccount(transactionDetails.getIdOfDestinationAccount())
-                .idOfSourceAccount(transactionDetails.getIdOfSourceAccount())
+                .user(transactionDetails.getIdOfSourceAccount())
                 .amount(transactionDetails.getAmount())
                 .build();
        transactionRepository.save(transaction);
     }
+    @Override
+    public String dataEnquiry(EnquiryRequest request) {
+        boolean isAccountExist=transactionRepository.existsByTransactionId(request.getAccountNumber());
+        if(!isAccountExist){
+            return AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE;
+        }
+        Transaction foundTransaction=transactionRepository.findByTransactionId(request.getAccountNumber());
+        return foundTransaction.getTransactionId() + " "+ foundTransaction.getAmount();
+
+    }
+
 }

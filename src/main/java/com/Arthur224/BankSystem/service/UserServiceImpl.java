@@ -1,18 +1,23 @@
 package com.Arthur224.BankSystem.service;
 
 import com.Arthur224.BankSystem.dto.*;
+import com.Arthur224.BankSystem.entity.Transaction;
 import com.Arthur224.BankSystem.entity.User;
+import com.Arthur224.BankSystem.repository.TransactionRepository;
 import com.Arthur224.BankSystem.repository.UserRepository;
 import com.Arthur224.BankSystem.utils.AccountUtils;
 import com.Arthur224.BankSystem.utils.TransactionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
     @Autowired
     EmailService emailService;
     @Autowired
@@ -95,7 +100,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public BankResponse creditAccount(CreditDebitRequest creditRequest) {
-        //If acc actually exist
+
         boolean isAccountExist=userRepository.existsByAccountNumber(creditRequest.getAccountNumber());
         if(!isAccountExist){
             return BankResponse.builder()
@@ -103,7 +108,7 @@ public class UserServiceImpl implements UserService{
                     .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
                     .accountInfo(null)
                     .build();
-    }
+        }
         User userToCredit= userRepository.findByAccountNumber(creditRequest.getAccountNumber());
         userToCredit.setAccountBalance(userToCredit.getAccountBalance().add(creditRequest.getAmount()));
         userRepository.save(userToCredit);
@@ -128,7 +133,7 @@ public class UserServiceImpl implements UserService{
                     .accountInfo(null)
                     .build();
         }
-        //Need to check if amount is possible to subtract from accountAmount
+
         User userToDebit= userRepository.findByAccountNumber(debitRequest.getAccountNumber());
         if(userToDebit.getAccountBalance().compareTo(debitRequest.getAmount())>=0){
         userToDebit.setAccountBalance(userToDebit.getAccountBalance().subtract(debitRequest.getAmount()));
@@ -183,21 +188,26 @@ public class UserServiceImpl implements UserService{
         User sourceUser=userRepository.findByAccountNumber(transferRequest.getSourceAccNumber());
         User destinationUser=userRepository.findByAccountNumber(transferRequest.getDestinationAccNumber());
         BigDecimal accountBalanceOfSourceUser = sourceUser.getAccountBalance();
-        Double amountOfMoney=transferRequest.getAmount();
+
 
         if(Double.compare(transferRequest.getAmount(),accountBalanceOfSourceUser.doubleValue())==-1){
-
-            sourceUser.setAccountBalance(sourceUser.getAccountBalance().subtract(BigDecimal.valueOf(amountOfMoney)));
-            userRepository.save(sourceUser );
             destinationUser.setAccountBalance(destinationUser.getAccountBalance().add(BigDecimal.valueOf(transferRequest.getAmount())));
-            userRepository.save(destinationUser);
             TransactionDetails transactionDetails=TransactionDetails.builder()
                     .transactionId(TransactionUtils.getTransactionId())
                     .transactionType("TRANSFER")
-                    .idOfDestinationAccount(destinationUser.getAccountNumber())
+                    .idOfDestinationAccount(destinationUser)
                     .idOfSourceAccount(sourceUser)
                     .amount(BigDecimal.valueOf(transferRequest.getAmount()))
                     .build();
+            Transaction transaction=transactionRepository.findByTransactionId(transactionDetails.getTransactionId());
+
+
+            sourceUser.getSourceTransactionList().add(transaction);
+            destinationUser.getDestinationTransactionList().add(transaction);
+
+
+            userRepository.save(sourceUser);
+            userRepository.save(destinationUser);
             transactionService.saveTransaction(transactionDetails);
             return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_TRANSFER_CODE)
@@ -221,12 +231,7 @@ public class UserServiceImpl implements UserService{
                         .build())
                 .build();
     }
-        
 
-
-
-
-
-    }
+}
 
 

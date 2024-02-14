@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,8 +35,10 @@ public class User {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
-    @OneToMany(mappedBy = "user")
-    @Column
-    List<Transaction> transactionList;
+    @OneToMany(mappedBy = "sourceUser")
+    List<Transaction> sourceTransactionList;
+    @OneToMany(mappedBy = "destinationUser")
+    List<Transaction> destinationTransactionList;
+
 
 }

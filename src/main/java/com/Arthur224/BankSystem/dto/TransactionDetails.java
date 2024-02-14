@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class TransactionDetails {
     private String transactionId;
     private User idOfSourceAccount;
-    private String idOfDestinationAccount;
+    private User idOfDestinationAccount;
     private String transactionType;
     private BigDecimal amount;
 

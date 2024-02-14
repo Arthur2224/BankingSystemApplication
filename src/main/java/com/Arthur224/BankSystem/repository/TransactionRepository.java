@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     Boolean existsByTransactionId(String transactionId);
     Transaction findByTransactionId(String transactionId);
-    Transaction findByUser(User idOfSourceAccount);
+    Transaction findByDestinationUser(User idOfSourceAccount);
+    Transaction findBySourceUser(User idOfSourceAccount);
 
 }

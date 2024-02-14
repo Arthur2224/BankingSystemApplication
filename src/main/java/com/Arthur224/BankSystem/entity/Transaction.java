@@ -21,15 +21,16 @@ public class Transaction {
     private String transactionId;
     @CreationTimestamp
     private LocalDateTime dateTime;
-   
-    private String idOfDestinationAccount;
     private String transactionType;
     private BigDecimal amount;
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "account_number")
-    private User user;
-
+    @JoinColumn(name = "source_account_number")
+    private User sourceUser;
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "destination_account_number")
+    private User destinationUser;
 
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
     @Autowired
     UserService userService;
@@ -18,6 +19,10 @@ public class UserController {
     @PostMapping
     public BankResponse createAccount(@RequestBody UserRequest userRequest){
         return userService.createAccount(userRequest);
+    }
+    @PostMapping("login")
+    public BankResponse login(@RequestBody UserRequest userRequest){
+        return userService.loginIntoAccount(userRequest);
     }
     @GetMapping("balanceEnquiry")
     public BankResponse balanceEnquiry(@RequestBody EnquiryRequest enquiryRequest){
@@ -40,8 +45,9 @@ public class UserController {
         return  userService.transfer(transferRequest);
     }
 
-    @GetMapping("transactionData")
-    public String dataEnquiry(@RequestBody EnquiryRequest transferRequest){
+    @GetMapping("transactionData/{value}")
+    public String dataEnquiry(@PathVariable String value,@RequestBody EnquiryRequest transferRequest){
+
         return  transactionService.dataEnquiry(transferRequest);
     }
 

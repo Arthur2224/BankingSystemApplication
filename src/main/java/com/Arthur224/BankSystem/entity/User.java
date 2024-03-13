@@ -30,6 +30,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private String status;
+    private String password;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

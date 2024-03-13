@@ -10,7 +10,10 @@ import com.Arthur224.BankSystem.utils.TransactionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -22,16 +25,19 @@ public class UserServiceImpl implements UserService{
     EmailService emailService;
     @Autowired
     TransactionService transactionService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public BankResponse createAccount(UserRequest userRequest) {
         if(userRepository.existsByEmail(userRequest.getEmail())){
-
+            System.out.println("Exist");
             return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_EXIST_CODE)
                     .responseMessage(AccountUtils.ACCOUNT_EXIST_MESSAGE)
                     .accountInfo(null)
                     .build();
         }
+
         User newUser=User.builder()
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
@@ -42,10 +48,10 @@ public class UserServiceImpl implements UserService{
                 .accountBalance(BigDecimal.ZERO)
                 .phoneNumber(userRequest.getPhoneNumber())
                 .status("ACTIVE")
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .build();
-
         User savedUser=userRepository.save(newUser);
-
+    /*
         EmailDetails emailDetails=new EmailDetails().builder()
                 .recipient(savedUser.getEmail())
                 .subject("Account creation")
@@ -53,6 +59,8 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         emailService.sendEmailAlert(emailDetails);
+*/
+
 
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_CREATION_SUCCESS)
@@ -64,6 +72,7 @@ public class UserServiceImpl implements UserService{
                         .build())
                 .build();
     }
+
 
     @Override
     public BankResponse balanceEnquiry(EnquiryRequest enquiryRequest) {
@@ -231,7 +240,40 @@ public class UserServiceImpl implements UserService{
                         .build())
                 .build();
     }
+    @Override
+    public BankResponse loginIntoAccount(UserRequest userRequest)
+    {        
+        if( !userRepository.existsByEmail(userRequest.getEmail()))
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+       else {
+            User sourceUser=userRepository.findByEmail(userRequest.getEmail());
+            if(passwordEncoder.matches(userRequest.getPassword(),sourceUser.getPassword())) {
+                return BankResponse.builder()
+                        .responseCode(AccountUtils.ACCOUNT_SUCCESFULLY_LOGIN_CODE)
+                        .responseMessage(AccountUtils.ACCOUNT_SUCCESFULLY_LOGIN_MESSAGE)
+                        .accountInfo(AccountInfo.builder()
+                                .accountBalance(String.valueOf(sourceUser.getAccountBalance()))
+                                .accountNumber(sourceUser.getAccountNumber())
+                                .accountName(sourceUser.getFirstName() + " " + sourceUser.getLastName() + " " + sourceUser.getOtherName())
+                                .build())
+                        .build();
+            }
+            else{
+                return BankResponse.builder()
+                        .responseCode(AccountUtils.ACCOUNT_LOGIN_WRONG_PASSWORD)
+                        .responseMessage(AccountUtils.ACCOUNT_LOGIN_WRONG_PASSWORD_MESSAGE)
+                        .accountInfo(null)
+                        .build();
+                }
+       }
 
-}
+       }
+    }
+
+
 
 

@@ -10,6 +10,11 @@ public class AccountUtils {
     public static final String ACCOUNT_EXIST_MESSAGE="Email is already in use!";
     public static final String ACCOUNT_CREATION_SUCCESS="002";
     public static final String ACCOUNT_CREATION_MESSAGE="Account successfully created!";
+
+    public static final String ACCOUNT_LOGIN_WRONG_PASSWORD="0021";
+    public static final String ACCOUNT_LOGIN_WRONG_PASSWORD_MESSAGE="The wrong password!";
+    public static final String ACCOUNT_SUCCESFULLY_LOGIN_CODE="0022";
+    public static final String ACCOUNT_SUCCESFULLY_LOGIN_MESSAGE="Succesfully login!";
     public static final String ACCOUNT_NOT_EXIST_CODE="003";
     public static final String ACCOUNT_NOT_EXIST_MESSAGE="Account doesn't exist!";
     public static final String ACCOUNT_OF_DESTINATION_NOT_EXIST_CODE="0031";

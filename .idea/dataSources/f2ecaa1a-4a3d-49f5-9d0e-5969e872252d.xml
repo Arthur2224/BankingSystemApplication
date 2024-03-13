@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="banksystem@localhost">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.51">
+    <root id="1">
+      <DefaultCasing>lower/lower</DefaultCasing>
+      <DefaultEngine>InnoDB</DefaultEngine>
+      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
+      <ServerVersion>8.0.34</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="mysql">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="3" parent="1" name="information_schema">
+      <CollationName>utf8mb3_general_ci</CollationName>
+    </schema>
+    <schema id="4" parent="1" name="performance_schema">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="5" parent="1" name="sys">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="6" parent="1" name="classicmodels">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="7" parent="1" name="demo">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="8" parent="1" name="insurancecompany">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="9" parent="1" name="banksystem">
+      <Current>1</Current>
+      <LastIntrospectionLocalTimestamp>2024-02-15.07:26:11</LastIntrospectionLocalTimestamp>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <table id="10" parent="9" name="transactions">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="11" parent="9" name="users">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <column id="12" parent="10" name="transaction_id">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="13" parent="10" name="amount">
+      <DasType>decimal(38,2 digit)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="14" parent="10" name="date_time">
+      <DasType>datetime(6)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="15" parent="10" name="transaction_type">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="16" parent="10" name="destination_account_number">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="17" parent="10" name="source_account_number">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <foreign-key id="18" parent="10" name="FKi2b7vgunkvwe6mnwk6r51tu7a">
+      <ColNames>destination_account_number</ColNames>
+      <RefColNames>account_number</RefColNames>
+      <RefTableName>users</RefTableName>
+    </foreign-key>
+    <foreign-key id="19" parent="10" name="FKngwumm5wx0hqmunvjxtak1q4d">
+      <ColNames>source_account_number</ColNames>
+      <RefColNames>account_number</RefColNames>
+      <RefTableName>users</RefTableName>
+    </foreign-key>
+    <index id="20" parent="10" name="PRIMARY">
+      <ColNames>transaction_id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="21" parent="10" name="FKi2b7vgunkvwe6mnwk6r51tu7a">
+      <ColNames>destination_account_number</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="22" parent="10" name="FKngwumm5wx0hqmunvjxtak1q4d">
+      <ColNames>source_account_number</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="23" parent="10" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="24" parent="11" name="account_number">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="25" parent="11" name="account_balance">
+      <DasType>decimal(38,2 digit)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="26" parent="11" name="created_at">
+      <DasType>datetime(6)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="27" parent="11" name="email">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="28" parent="11" name="first_name">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="29" parent="11" name="last_name">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="30" parent="11" name="modified_at">
+      <DasType>datetime(6)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="31" parent="11" name="other_name">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="32" parent="11" name="phone_number">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="33" parent="11" name="state_of_origin">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="34" parent="11" name="status">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <index id="35" parent="11" name="PRIMARY">
+      <ColNames>account_number</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="36" parent="11" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+  </database-model>
+</dataSource>

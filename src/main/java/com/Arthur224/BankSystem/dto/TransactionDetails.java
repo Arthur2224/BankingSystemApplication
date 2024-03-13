@@ -1,5 +1,6 @@
 package com.Arthur224.BankSystem.dto;
 
+import com.Arthur224.BankSystem.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class TransactionDetails {
     private String transactionId;
-    private String idOfSourceAccount;
-    private String idOfDestinationAccount;
+    private User idOfSourceAccount;
+    private User idOfDestinationAccount;
     private String transactionType;
     private BigDecimal amount;
 

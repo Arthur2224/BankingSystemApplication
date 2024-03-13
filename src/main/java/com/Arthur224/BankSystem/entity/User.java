@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,24 +17,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Data
 @Table(name="users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String accountNumber;
     private String firstName;
     private String lastName;
     private String otherName;
     private String stateOfOrigin;
-    private String accountNumber;
     private BigDecimal accountBalance;
     private String email;
     private String phoneNumber;
     private String status;
+    private String password;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
+    @OneToMany(mappedBy = "sourceUser")
+    List<Transaction> sourceTransactionList;
+    @OneToMany(mappedBy = "destinationUser")
+    List<Transaction> destinationTransactionList;
+
 
 }

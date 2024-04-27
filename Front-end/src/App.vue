@@ -1,57 +1,38 @@
 <script>
-import RegistrationForm from './components/RegistrationForm.vue';
-import LoginForm from './components/Login.vue';
-import CabinetForm from './components/AccountCabinet.vue';
-
 export default {
   name: 'App',
-  components: { 
-    AccountCabinet:CabinetForm,
-    RegistrationForm,
-    LoginF: LoginForm,
-
-    
-  },
+  components: {},
   data() {
     return {
       showLabel: false,
       labelText: '',
-      loggedIn:false,
+      loggedIn: false,
       userData: {
         type: Object,
         required: true
       }
-    };
+    }
   },
   methods: {
-    handleRegistration(userData) {
-     
-      if(userData.accountInfo!=null){
-              this.showLabel = true;
-        // Add notification of successful registration 
-      }
+    handleUserSign(userData, actionType) {
+      if (actionType === 'registration') {
+        this.showLabel = true
 
-    },
-    handleLogin(loginData) {
-     
-      console.log("Login data:", loginData);
-      if(loginData.accountInfo!=null){
-         this.userData=loginData.accountInfo;
-        // add notification of successful login
-        this.loggedIn=true;
-        
-        
-        
+        this.$router.push('/login')
+      } else if (actionType === 'login') {
+        console.log('Login data:', userData)
+        if (userData.accountInfo != null) {
+          this.userData = userData.accountInfo
+
+          this.loggedIn = true
+        } else if (userData.responseCode == '0021') {
+          // check obly if message not success code
+          console.log(userData.responseMessage)
+        }
       }
-      else if(loginData.responseCode=="0021")
-      {
-        console.log(loginData.responseMessage)
-      }
-     
-     
     }
-  }};
-
+  }
+}
 </script>
 <template>
   <div class="blockBody">
@@ -62,88 +43,63 @@ export default {
       <div class="leftBlock">
         <p>left</p>
       </div>
-      <div class="centreBlock">
+      <div class="centerBlock">
         <div v-if="!loggedIn" class="tabs">
           <nav class="tabs_item">
-            <RouterLink to="/signUp">SignUp</RouterLink>
-           
-            <RouterLink to="/login">Login</RouterLink>
+            <router-link to="/signUp">SignUp</router-link>
+            <router-link to="/login">Login</router-link>
           </nav>
         </div>
-        <div v-if="!loggedIn" class="tabs__body">
-          <div id="RegistrationTab" class="tabs__block">
-            <RegistrationForm @registration="handleRegistration" />
-          </div>
-          <div id="LoginTab" class="tabs__block">
-            <LoginF @login="handleLogin" />
-          </div>
-        </div>
-        <div v-if="loggedIn" class="account__cabinet">
-          <AccountCabinet :userData="userData" />
-        </div>
+        <router-view @event="handleUserSign"></router-view>
       </div>
+
       <div class="rightBlock">
         <p>Right</p>
       </div>
     </div>
   </div>
-  <RouterView/>
 </template>
 
-
-
-
 <style scoped>
-.blockBody{
-  margin:0;
+.blockBody {
+  margin: 0;
   padding: 0 0;
   height: 100%;
- 
-
 }
 
 .blocks {
-  display:flex;
-  min-height: 89vh ;
- 
+  display: flex;
+  min-height: 89vh;
 }
 
-.centreBlock{
+.centerBlock {
   background-color: rgba(207, 79, 79, 0.267);
 }
-.header{
-
-  color:whitesmoke;
+.header {
+  color: whitesmoke;
   font-size: 40px;
   height: 100px;
 }
-.centreBlock{
-  
- 
+.centerBlock {
   min-width: 540px;
   border-radius: 10px;
   width: 100%;
-  
-  color:rgb(248, 248, 248);
+
+  color: rgb(248, 248, 248);
 }
-.leftBlock{
-  margin-left:0px;
+.leftBlock {
+  margin-left: 0px;
   min-width: 15%;
-  
 }
-.tabs{
+.tabs {
   margin-left: 25%;
   margin-right: 25%;
 }
-.rightBlock{
+.rightBlock {
   min-width: 15%;
-
-   
- 
 }
 .tabs {
   width: 50%; /* Ширина контейнера с вкладками */
-
 }
 
 .tabs_item {
@@ -173,13 +129,8 @@ export default {
 .tabs__block:target {
   display: block;
 }
-.account__cabinet{
-
+.account__cabinet {
   text-align: center;
-  flex:1;
-
-
+  flex: 1;
 }
-
 </style>
-

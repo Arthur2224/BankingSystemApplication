@@ -1,16 +1,34 @@
 <template>
-    <div class="account-cabinet">
-      <h2>Lietotāja konta informācija</h2>
-      <div>
-        <p><strong>Vārds:</strong> {{ userData.accountName }}</p>
-        <p if:userData.lastName><strong>Uzvārds:</strong> {{ userData.lastName }}</p>
-        <p><strong>E-pasts:</strong> {{ userData.email }}</p>
-       
+    <div class="bodyMain">
+     <div class="leftSide">
+         <div class="bodyCard">
+            <p >Account number:</p>
+            <p>{{ userData.accountNumber }}</p>
+          <div class="accountBalance_body">
+            <p>Account balance:</p>
+            <p id="accountBalance_text">{{ userData.accountBalance }}</p>
+          </div>
+        </div>
+        <div class="operations">
+          <a @click="updateBalance">Update</a>
+          <a>Send</a>
+        </div>
       </div>
+     <div class="rightSide">
+       <div class="bodyHeader">
+          <p>Hello,  {{userData.accountName }}</p>
+        </div>
+     </div>
+  
+     
+
+     
+     
     </div>
   </template>
   
-  <script>
+  <script> 
+  import axios from 'axios';
   export default {
     name: 'AccountCabinet',
     props: {
@@ -18,30 +36,84 @@
         type: Object,
         required: true
       }
+    },
+    methods:{
+      updateBalance(){
+        const enquiryRequest={
+          account_number:this.userData.accountNumber
+        };
+        axios.get('http://localhost:8080/api/balanceEnquiry', enquiryRequest)
+          .then(response =>{
+            console.log(response.data)
+          })
+          .catch(error=>{
+            console.log("ERROR:",error)
+          })
+      }
     }
   };
   </script>
   
   <style scoped>
-  .account-cabinet {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
+
+  .bodyMain{
+  margin: 10px;
+    border: 5px solid #f8f8f8; 
+    border-radius: 10px;
+    display: flex;
+    height: 100%;
+    margin:40px;
+    
+
+  }
+  .leftSide{
+    background-color: #f8f8f8;
+    min-width: fit-content;
+    width: 50%;
+    display: flex;
     border-radius: 5px;
-    background-color: #050505;
   }
-  .account-cabinet h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+  .operations{
+    display: flex;
+    margin-left:20px;
+    justify-content: center; 
+    align-items: center; 
+   
+    
   }
-  .account-cabinet div {
-    background-color:#050505;
-    padding: 20px;
-    border-radius: 5px;
+  .operations a{
+    margin-left:5px;
   }
-  .account-cabinet p {
-    margin-bottom: 10px;
+  .rightSide{
+
   }
+  .bodyHeader{
+    
+    margin-right: auto;
+    
+  }
+  .bodyCard{
+    width: 350px;
+    min-width: auto;
+    height: 200px;
+   
+   
+    
+    max-height: 400px;
+   
+    
+
+    text-align: left; color:#000; font-size: 25px;
+    
+  }
+  .accountBalance_body{
+    display: flex;
+  }
+  #accountBalance_text{
+    padding-left: 10px;
+    font-size: 35px;
+    margin-top: -10px;
+  }
+
   </style>
   

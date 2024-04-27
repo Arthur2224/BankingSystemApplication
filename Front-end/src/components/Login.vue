@@ -48,7 +48,11 @@
   </script>
   
   <style scoped>
+  h1{
+    text-align: center;
+  }
   .login-form {
+    
     max-width: 400px;
     margin: 0 auto;
   }
@@ -70,7 +74,7 @@
   .login-form button {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: purple;
     color: #fff;
     border: none;
     border-radius: 4px;

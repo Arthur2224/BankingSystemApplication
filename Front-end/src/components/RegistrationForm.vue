@@ -23,7 +23,7 @@
       <label for="password">Пароль:</label>
       <input type="password" id="password" v-model="password" required>
       
-      <button type="submit" @click="registerUser">Зарегистрироваться</button>
+      <button  id ="registerBtn" type="submit" @click="registerUser">Зарегистрироваться</button>
     </form>
   </div>
  
@@ -53,42 +53,50 @@ export default {
     };
   },
   methods: {
-    
-    registerUser() {
-      if(!this.firstName.trim()
-        ||!this.lastName.trim()
-        ||!this.email.trim()
-        ||!this.password.trim()){
-          
-  
-        return;
-      }
-      const userData = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        otherName: this.otherName,
-        stateOfOrigin: this.stateOfOrigin,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
-        password: this.password
-      };
-      
-      axios.post('http://localhost:8080/api/user', userData)
-        .then(response => {
-          console.log(response.data); 
-          this.$emit('registration', userData);
-          
-        })
-        .catch(error => {
-          console.error('Ошибка при отправке данных:', error);
-         
-        });
+  registerUser() {
+    if(!this.firstName.trim() || !this.lastName.trim() || !this.email.trim() || !this.password.trim()) {
+      return;
     }
+
+    const userData = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      otherName: this.otherName,
+      stateOfOrigin: this.stateOfOrigin,
+      email: this.email,
+      phoneNumber: this.phoneNumber,
+      password: this.password
+    };
+
+   
+    document.getElementById('registerBtn').disabled = true;
+
+    axios.post('http://localhost:8080/api/user', userData)
+      .then(response => {
+        console.log(response.data); 
+        this.$emit('registration', userData);
+        
+       
+        setTimeout(() => {
+          document.getElementById('registerBtn').disabled = false;
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Ошибка при отправке данных:', error);
+        
+        // Enable the button if there's an error
+        document.getElementById('registerBtn').disabled = false;
+      });
   }
+}
+
 };
 </script>
 
 <style scoped>
+h1{
+  text-align: center;
+}
 .registration-form {
   max-width: 400px;
   margin: 0 auto;
@@ -114,7 +122,7 @@ export default {
 .registration-form button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: purple;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -125,18 +133,7 @@ export default {
 .registration-form button:hover {
   background-color: #0056b3;
 }
-.custom-alert {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  display: none; /* Initially hidden */
-}
+
 
 .custom-alert-content {
   text-align: center;

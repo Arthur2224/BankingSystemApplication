@@ -1,39 +1,3 @@
-
-<template>
-  <div class="blockBody">
-    <div class="header"><p>BankingSystemApplication</p></div>
-   <div class="blocks">
-      <div class="leftBlock">
-        <p>left</p>
-      </div>
-      <div class="centreBlock"> 
-        <div class="tabs">
-          <nav class="tabs_item">
-            <a href="#RegistrationTab" class="tabs__item">Registration</a>
-            <a href="#LoginTab" class="tabs__item">Login</a>
-        </nav>
-      <div class="tabs__body">
-        <div id="RegistrationTab" class="tabs__block">
-          <RegistrationForm @registration="handleRegistration" />
-        </div>
-        <div id="LoginTab" class="tabs__block">
-          <LoginF @login="handleLogin" />
-        </div>
-      </div>
-    
-  
-  </div>
-  <div v-if="loggedIn">
-  <AccountCabinet :userData="userData" />
-</div>
-      </div>
-      <div class="rightBlock">
-        <p>right</p>
-      </div>
-   </div>
-  </div>
-</template>
-
 <script>
 import RegistrationForm from './components/RegistrationForm.vue';
 import LoginForm from './components/Login.vue';
@@ -64,17 +28,20 @@ export default {
      
       if(userData.accountInfo!=null){
               this.showLabel = true;
-      this.loggedIn=true;
+        // Add notification of successful registration 
       }
 
     },
     handleLogin(loginData) {
-      
+     
       console.log("Login data:", loginData);
       if(loginData.accountInfo!=null){
          this.userData=loginData.accountInfo;
-      console.log( loginData.accountInfo.accountBalance);
-      this.loggedIn=true;
+        // add notification of successful login
+        this.loggedIn=true;
+        
+        
+        
       }
       else if(loginData.responseCode=="0021")
       {
@@ -86,68 +53,94 @@ export default {
   }};
 
 </script>
+<template>
+  <div class="blockBody">
+    <div class="header">
+      <p>BankingSystemApplication</p>
+    </div>
+    <div class="blocks">
+      <div class="leftBlock">
+        <p>left</p>
+      </div>
+      <div class="centreBlock">
+        <div v-if="!loggedIn" class="tabs">
+          <nav class="tabs_item">
+            <RouterLink to="/signUp">SignUp</RouterLink>
+           
+            <RouterLink to="/login">Login</RouterLink>
+          </nav>
+        </div>
+        <div v-if="!loggedIn" class="tabs__body">
+          <div id="RegistrationTab" class="tabs__block">
+            <RegistrationForm @registration="handleRegistration" />
+          </div>
+          <div id="LoginTab" class="tabs__block">
+            <LoginF @login="handleLogin" />
+          </div>
+        </div>
+        <div v-if="loggedIn" class="account__cabinet">
+          <AccountCabinet :userData="userData" />
+        </div>
+      </div>
+      <div class="rightBlock">
+        <p>Right</p>
+      </div>
+    </div>
+  </div>
+  <RouterView/>
+</template>
+
+
+
 
 <style scoped>
 .blockBody{
   margin:0;
   padding: 0 0;
   height: 100%;
+ 
 
 }
 
 .blocks {
   display:flex;
-  min-height: 500px ;
+  min-height: 89vh ;
  
 }
 
 .centreBlock{
-  background-color: rgba(138, 26, 12, 0.8);
+  background-color: rgba(207, 79, 79, 0.267);
 }
 .header{
 
-  background-color: rgba(33, 7, 80, 0.832);
-
+  color:whitesmoke;
+  font-size: 40px;
   height: 100px;
 }
 .centreBlock{
-  display: flex;
- content: center;
+  
+ 
   min-width: 540px;
-  max-width: 40%;
+  border-radius: 10px;
   width: 100%;
   
-  color:black;
+  color:rgb(248, 248, 248);
 }
 .leftBlock{
   margin-left:0px;
-  width: 35%;
- 
+  min-width: 15%;
+  
 }
 .tabs{
   margin-left: 25%;
   margin-right: 25%;
 }
 .rightBlock{
-  min-width: 25%;
-  width: 35%;
+  min-width: 15%;
+
+   
  
 }
-.header{
-  color:black;
-  font-size: 30px;
-}
-
-
-
-
-
-
-
-
-
-
-
 .tabs {
   width: 50%; /* Ширина контейнера с вкладками */
 
@@ -179,6 +172,13 @@ export default {
 
 .tabs__block:target {
   display: block;
+}
+.account__cabinet{
+
+  text-align: center;
+  flex:1;
+
+
 }
 
 </style>

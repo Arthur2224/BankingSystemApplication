@@ -24,9 +24,12 @@ public class UserController {
     public BankResponse login(@RequestBody UserRequest userRequest){
         return userService.loginIntoAccount(userRequest);
     }
-    @GetMapping("balanceEnquiry")
-    public BankResponse balanceEnquiry(@RequestBody EnquiryRequest enquiryRequest){
-        return userService.balanceEnquiry(enquiryRequest);
+
+    @GetMapping("balanceEnquiry/{id}")
+    public BankResponse balanceEnquiry(@PathVariable("id") String id){
+        return userService.balanceEnquiry(EnquiryRequest.builder()
+                        .accountNumber(id)
+                .build());
     }
     @GetMapping("nameEnquiry")
     public String nameEnquiry(@RequestBody EnquiryRequest enquiryRequest){

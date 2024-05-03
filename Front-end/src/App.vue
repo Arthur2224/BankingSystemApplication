@@ -20,10 +20,8 @@ export default {
 
         this.$router.push('/login')
       } else if (actionType === 'login') {
-        console.log('Login data:', userData)
         if (userData.accountInfo != null) {
-          this.userData = userData.accountInfo
-
+          this.$router.push('/mainMenu/' + userData.accountInfo.accountNumber)
           this.loggedIn = true
         } else if (userData.responseCode == '0021') {
           // check obly if message not success code

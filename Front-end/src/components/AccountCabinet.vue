@@ -1,119 +1,104 @@
 <template>
-    <div class="bodyMain">
-     <div class="leftSide">
-         <div class="bodyCard">
-            <p >Account number:</p>
-            <p>{{ userData.accountNumber }}</p>
-          <div class="accountBalance_body">
-            <p>Account balance:</p>
-            <p id="accountBalance_text">{{ userData.accountBalance }}</p>
-          </div>
-        </div>
-        <div class="operations">
-          <a @click="updateBalance">Update</a>
-          <a>Send</a>
+  <div class="bodyMain" style="display: flex; justify-content: space-between; padding: 20px">
+    <div class="leftSide" style="width: 50%">
+      <div
+        class="bodyCard"
+        style="background-color: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 20px"
+      >
+        <div class="accountBalance_body" style="margin-top: 20px; color: black">
+          <p>{{ holderName }}</p>
+          <p>{{ holderNumber }}</p>
+          <p id="accountBalance_text">{{ holderBalance }}</p>
         </div>
       </div>
-     <div class="rightSide">
-       <div class="bodyHeader">
-          <p>Hello,  {{userData.accountName }}</p>
-        </div>
-     </div>
-  
-     
-
-     
-     
+      <div class="operations" style="display: flex; justify-content: space-between">
+        <a @click="updateBalance" style="cursor: pointer">Update</a>
+        <!-- Измененная кнопка "Send", добавлен обработчик события -->
+        <a @click="showSendWindows" style="cursor: pointer">Send</a>
+      </div>
     </div>
-  </template>
-  
-  <script> 
-  import axios from 'axios';
-  export default {
-    name: 'AccountCabinet',
-    props: {
-      userData: {
-        type: Object,
-        required: true
-      }
-    },
-    methods:{
-      updateBalance(){
-        const enquiryRequest={
-          account_number:this.userData.accountNumber
-        };
-        axios.get('http://localhost:8080/api/balanceEnquiry', enquiryRequest)
-          .then(response =>{
-            console.log(response.data)
-          })
-          .catch(error=>{
-            console.log("ERROR:",error)
-          })
-      }
+    <div class="rightSide" style="width: 50%">
+      <div class="bodyHeader"></div>
+    </div>
+  </div>
+
+  <!-- Добавлено внутреннее окно для отправки средств -->
+  <div class="sendWindow" v-if="showSendWindow">
+    <div class="sendWindowContent">
+      <h2>Send Money</h2>
+      <!-- Поля для аккаунта получателя и суммы -->
+      <div>
+        <label for="recipientAccount">Recipient Account:</label>
+        <input type="text" id="recipientAccount" v-model="recipientAccount" />
+      </div>
+      <div>
+        <label for="amount">Amount:</label>
+        <input type="text" id="amount" v-model="amount" />
+      </div>
+      <!-- Кнопки для отправки и отмены -->
+      <div>
+        <button @click="sendMoney">Send</button>
+        <button @click="cancelSend">Cancel</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+export default {
+  name: 'AccountCabinet',
+  data() {
+    return {
+      holderName: '',
+      holderNumber: '',
+      holderBalance: '',
+      // Добавлены переменные для хранения данных о переводе
+      showSendWindow: false,
+      recipientAccount: '',
+      amount: ''
     }
-  };
-  </script>
-  
-  <style scoped>
+  },
+  methods: {
+    updateBalance() {
+      axios
+        .get('http://localhost:8080/api/user/balanceEnquiry/' + this.$route.params.id)
+        .then((response) => {
+          const { accountInfo } = response.data
+          this.holderName = accountInfo.accountName
+          this.holderBalance = accountInfo.accountBalance
+          this.holderNumber = accountInfo.accountNumber
+        })
+        .catch((error) => {
+          console.log('ERROR:', error)
+        })
+    },
+    // Метод для отображения внутреннего окна отправки средств
+    showSendWindows() {
+      this.showSendWindow = true
+    },
+    // Метод для отправки средств
+    sendMoney() {
+      // Ваша логика отправки средств
+      // Может быть реализована с помощью запроса axios, как для обновления баланса
+      // и обработки ошибок
+      console.log('Sending money to:', this.recipientAccount)
+      console.log('Amount:', this.amount)
+      // После отправки средств скрываем внутреннее окно
+      this.showSendWindow = false
+    },
+    // Метод для отмены отправки средств
+    cancelSend() {
+      // Просто скрываем внутреннее окно
+      this.showSendWindow = false
+    }
+  },
+  mounted() {
+    this.updateBalance()
+  }
+}
+</script>
 
-  .bodyMain{
-  margin: 10px;
-    border: 5px solid #f8f8f8; 
-    border-radius: 10px;
-    display: flex;
-    height: 100%;
-    margin:40px;
-    
-
-  }
-  .leftSide{
-    background-color: #f8f8f8;
-    min-width: fit-content;
-    width: 50%;
-    display: flex;
-    border-radius: 5px;
-  }
-  .operations{
-    display: flex;
-    margin-left:20px;
-    justify-content: center; 
-    align-items: center; 
-   
-    
-  }
-  .operations a{
-    margin-left:5px;
-  }
-  .rightSide{
-
-  }
-  .bodyHeader{
-    
-    margin-right: auto;
-    
-  }
-  .bodyCard{
-    width: 350px;
-    min-width: auto;
-    height: 200px;
-   
-   
-    
-    max-height: 400px;
-   
-    
-
-    text-align: left; color:#000; font-size: 25px;
-    
-  }
-  .accountBalance_body{
-    display: flex;
-  }
-  #accountBalance_text{
-    padding-left: 10px;
-    font-size: 35px;
-    margin-top: -10px;
-  }
-
-  </style>
-  
+<style scoped>
+@import url('/src/components/style/AccountCabinetStyle.css');
+</style>
